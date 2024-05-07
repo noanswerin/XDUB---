@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lay_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_bg"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.MainActivity">
+    <!--顶部标题-->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/materialToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:ellipsize="middle"
+            android:singleLine="true"
+            android:text="城市天气"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16" />
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <!--下拉刷新视图-->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/lay_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/materialToolbar">
+        <!--滚动视图-->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/lay_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <!--页面主要内容视图-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_0">
+                <!--滑动距离布局-->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/lay_scroll_height"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+                    <!--天气状况-->
+                    <TextView
+                        android:id="@+id/tv_week"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dp_16"
+                        android:layout_marginTop="@dimen/dp_8"
+                        android:text="星期几"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_18"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                    <!--温度-->
+                    <TextView
+                        android:id="@+id/tv_temp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_24"
+                        android:text="0"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_60"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_week" />
+                    <!--摄氏度符号-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="℃"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_24"
+                        app:layout_constraintStart_toEndOf="@+id/tv_temp"
+                        app:layout_constraintTop_toTopOf="@+id/tv_temp" />
+                    <!--当天最高温和最低温-->
+                    <LinearLayout
+                        android:id="@+id/lay_temp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintEnd_toEndOf="@+id/tv_temp"
+                        app:layout_constraintStart_toStartOf="@+id/tv_temp"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_temp">
+                        <!--最高温-->
+                        <TextView
+                            android:id="@+id/tv_height"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_14" />
+                        <!--最低温-->
+                        <TextView
+                            android:id="@+id/tv_low"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/temp_min_tx"
+                            android:textSize="@dimen/sp_14" />
+                    </LinearLayout>
+                    <!--天气状况和空气质量-->
+                    <LinearLayout
+                        android:id="@+id/lay_info_air_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="@+id/lay_temp"
+                        app:layout_constraintStart_toStartOf="@+id/lay_temp"
+                        app:layout_constraintTop_toBottomOf="@+id/lay_temp">
+                        <!--天气状况-->
+                        <TextView
+                            android:id="@+id/tv_weather_info"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_14" />
+                        <!--空气质量-->
+                        <TextView
+                            android:id="@+id/tv_air_info"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="@dimen/dp_8"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_14" />
+                    </LinearLayout>
+                    <!--城市-->
+                    <TextView
+                        android:id="@+id/tv_city"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="城市"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_20"
+                        app:layout_constraintEnd_toEndOf="@+id/tv_temp"
+                        app:layout_constraintStart_toStartOf="@+id/tv_temp"
+                        app:layout_constraintTop_toBottomOf="@+id/lay_info_air_info" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                <!--App名称-->
+                <TextView
+                    android:id="@+id/tv_app_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:drawableStart="@mipmap/icon_weather_sun"
+                    android:drawablePadding="@dimen/dp_4"
+                    android:text="Good Weather New"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/lay_scroll_height" />
+                <!--上一次更新时间-->
+                <TextView
+                    android:id="@+id/tv_update_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dp_16"
+                    android:text="最近更新时间："
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_app_name"
+                    app:layout_constraintEnd_toEndOf="@+id/lay_scroll_height"
+                    app:layout_constraintTop_toTopOf="@+id/tv_app_name" />
+                <!--分隔线 增加UI效果-->
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_1"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:layout_marginEnd="@dimen/dp_16"
+                    android:alpha="0.1"
+                    android:background="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_app_name" />
+                <!--逐小时天气预报列表-->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_hourly"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:paddingStart="@dimen/dp_16"
+                    android:paddingEnd="@dimen/dp_16"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view" />
+                <!--天气预报列表-->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_daily"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/dp_16"
+                    android:paddingEnd="@dimen/dp_16"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rv_hourly" />
+                <!--空气质量-->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/lay_air"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/rv_daily"
+                    tools:layout_editor_absoluteX="16dp">
+                    <!--空气质量-->
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:text="空气质量"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_18"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                    <!--污染指数-->
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="污染指数"
+                        android:textColor="#DAEBEE"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+                    <com.example.myweather.view.RoundProgressBar
+                        android:id="@+id/rpb_aqi"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView4"
+                        app:round_bg_color="#C6D7F4"
+                        app:round_progress_color="#FBFEF7" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_begin="205dp" />
+
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="PM10"
+                        android:textColor="@color/ari_tx_color"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_pm10"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/textView4"
+                        app:layout_constraintStart_toStartOf="@+id/guideline3"
+                        app:layout_constraintTop_toTopOf="@+id/textView4" />
+
+                    <TextView
+                        android:id="@+id/tv_pm10"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/textView5"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/textView5" />
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="PM2.5"
+                        android:textColor="@color/ari_tx_color"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_pm10"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="@+id/guideline3"
+                        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+                    <TextView
+                        android:id="@+id/tv_pm25"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/textView6"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/textView5" />
+                    <!--NO2 二氧化氮-->
+                    <LinearLayout
+                        android:id="@+id/lay_air_no"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_pm10"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="@+id/guideline3"
+                        app:layout_constraintTop_toBottomOf="@+id/textView6">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="NO"
+                            android:textColor="@color/ari_tx_color"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="top"
+                            android:text="2"
+                            android:textColor="@color/ari_tx_color"
+                            android:textSize="8sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_no2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/lay_air_no"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/textView5" />
+                    <!--NO2 二氧化硫-->
+                    <LinearLayout
+                        android:id="@+id/lay_air_so"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_pm10"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="@+id/guideline3"
+                        app:layout_constraintTop_toBottomOf="@+id/lay_air_no">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="SO"
+                            android:textColor="@color/ari_tx_color"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="top"
+                            android:text="2"
+                            android:textColor="@color/ari_tx_color"
+                            android:textSize="8sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_so2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/lay_air_so"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/textView5" />
+                    <!--O3 臭氧-->
+                    <LinearLayout
+                        android:id="@+id/lay_air_o3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_pm10"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="@+id/guideline3"
+                        app:layout_constraintTop_toBottomOf="@+id/lay_air_so">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="O"
+                            android:textColor="@color/ari_tx_color"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="top"
+                            android:text="3"
+                            android:textColor="@color/ari_tx_color"
+                            android:textSize="8sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_o3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/lay_air_o3"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/textView5" />
+
+                    <TextView
+                        android:id="@+id/textView7"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="CO"
+                        android:textColor="@color/ari_tx_color"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_pm10"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="@+id/guideline3"
+                        app:layout_constraintTop_toBottomOf="@+id/lay_air_o3" />
+
+                    <TextView
+                        android:id="@+id/tv_co"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/textView7"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/textView5" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                <!--风向风力-->
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:layout_marginTop="16dp"
+                    android:text="风向风力"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_18"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/lay_air" />
+                <!--大风车-->
+                <com.example.myweather.view.WhiteWindmills
+                    android:id="@+id/ww_big"
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView2"
+                    tools:ignore="MissingConstraints" />
+                <!--小风车-->
+                <com.example.myweather.view.WhiteWindmills
+                    android:id="@+id/ww_small"
+                    android:layout_width="50dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="32dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/ww_big"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline2"
+                    app:layout_constraintStart_toStartOf="@+id/ww_big"
+                    tools:ignore="MissingConstraints" />
+                <!--纵向辅助线-->
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_begin="205dp" />
+                <!--风向风力文字-->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="@+id/ww_big"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/guideline2"
+                    app:layout_constraintTop_toTopOf="@+id/ww_big">
+                    <!--风向-->
+                    <TextView
+                        android:id="@+id/tv_wind_direction"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_14" />
+                    <!--风力-->
+                    <TextView
+                        android:id="@+id/tv_wind_power"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_24"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_14" />
+                </LinearLayout>
+                <!--生活建议-->
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:layout_marginTop="16dp"
+                    android:text="生活建议"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_18"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ww_big" />
+                <!--生活建议列表-->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_lifestyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:paddingStart="@dimen/dp_16"
+                    android:paddingEnd="@dimen/dp_16"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
